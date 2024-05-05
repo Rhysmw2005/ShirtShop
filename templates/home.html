@@ -2,10 +2,6 @@
 
 {% block content %}
     <!-- Links to change the sorting order -->
-    <div>
-        <a href="{{ url_for('home', sort='asc') }}" class="btn btn-link">Sort A-Z</a>  <!-- Link to sort alphabetically -->
-        <a href="{{ url_for('home', sort='desc') }}" class="btn btn-link">Sort Z-A</a>  <!-- Link to sort in reverse -->
-    </div>
 
     {% for shirt in shirts %}
     <article class="media content-section">
