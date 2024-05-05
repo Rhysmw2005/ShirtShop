@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <!-- Links to change the sorting order -->
+    <div>
+        <a href="{{ url_for('home', sort='asc') }}" class="btn btn-link">Sort A-Z</a>  <!-- Link to sort alphabetically -->
+        <a href="{{ url_for('home', sort='desc') }}" class="btn btn-link">Sort Z-A</a>  <!-- Link to sort in reverse -->
+    </div>
+
+    {% for shirt in shirts %}
+    <article class="media content-section">
+        <img src="{{ url_for('static', filename='images/' ~ shirt.shirt_image) }}" 
+             alt="{{ shirt.team_name }}" 
+             class="img-thumbnail img-padding" 
+             width="150" 
+             height="150"> 
+
+        <div class="media-body text-padding">
+          <h2>
+              <a class="article-title" href="#">{{ shirt.team_name }}</a>  <!-- Display the team name -->
+          </h2>
+          
+          <p class="article-content">£{{ shirt.price }}</p>  <!-- Price in pounds -->
+          <p class="article-content">{{ shirt.description }}</p>  <!-- Description -->
+          
+          <form action="{{ url_for('add_to_basket', shirt_id=shirt.id) }}" method="post">
+              <button type="submit" class="btn btn-primary">Add to Basket</button>
+          </form>
+        </div>
+      </article>
+    {% endfor %}
+{% endblock content %}

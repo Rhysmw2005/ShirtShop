@@ -1,0 +1,27 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>Your Basket</h1>
+
+{% if basket %}
+    <ul>
+        {% for item in basket %}
+            <li>
+                {{ item.team_name }} - {{ item.description }} - £{{ item.price }}
+                <!-- Form to remove an item from the basket -->
+                <form action="{{ url_for('remove_from_basket', shirt_id=item.id) }}" method="post" style="display:inline;">
+                    <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                </form>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <!-- Display the total cost -->
+    <h3>Total Cost: £{{ total_cost }}</h3>  <!-- Display the calculated total cost -->
+
+{% else %}
+    <p>Your basket is empty.</p>
+{% endif %}
+
+<a href="{{ url_for('home') }}">Back to Home</a>  <!-- Link back to the home page -->
+{% endblock %}
