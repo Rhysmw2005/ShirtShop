@@ -10,7 +10,6 @@
     
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
 
-    
     {% if title %}
         <title>Shirt Shop - {{ title }}</title>
     {% else %}
@@ -39,17 +38,16 @@
             </div>
           </div>
         </nav>
-      </header>
+    </header>
 
-      <main role="main" class="container">
+    <main role="main" class="container">
         <div class="row">
           <div class="col-md-8">
             {% with messages = get_flashed_messages(with_categories=true) %}
               {% if messages %}
-                {% for catergory, message in messages %}
+                {% for category, message in messages %}
                   <div class="alert alert-{{ category }}">
                     {{ message }}
-
                   </div>
                 {% endfor %}
               {% endif %}
@@ -58,19 +56,25 @@
           </div>
           <div class="col-md-4">
             <div class="content-section">
-              <h3>Our Sidebar</h3>
-              <p class='text-muted'>You can put any information here you'd like.
-                <ul class="list-group">
-                  <li class="list-group-item list-group-item-light">Latest Posts</li>
-                  <li class="list-group-item list-group-item-light">Announcements</li>
-                  <li class="list-group-item list-group-item-light">Calendars</li>
-                  <li class="list-group-item list-group-item-light">etc</li>
-                </ul>
-              </p>
+              <!-- Search Bar -->
+              <form method="get" action="{{ url_for('home') }}">
+                <div class="form-group">
+                  <label for="search">Search for Shirts:</label>
+                  <input type="text" id="search" name="query" class="form-control" placeholder="Search by team name" value="{{ request.args.get('query', '') }}">  <!-- Search input with existing value -->
+                </div>
+                <button type="submit" class="btn btn-primary">Search</button>
+              </form>
+
+              <!-- Filter Options -->
+              <h3>Sort & Filter</h3>
+              <div>
+                <a href="{{ url_for('home', sort='asc') }}" class="btn btn-link">Sort A-Z</a>  <!-- Sort alphabetically -->
+                <a href="{{ url_for('home', sort='desc') }}" class="btn btn-link">Sort Z-A</a>  <!-- Sort in reverse -->
+              </div>
             </div>
           </div>
         </div>
-      </main>
+    </main>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

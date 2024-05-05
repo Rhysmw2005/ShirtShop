@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<div class="shirt-detail">
+    <!-- Display the shirt image -->
+    <img src="{{ url_for('static', filename='images/' ~ shirt.shirt_image) }}" 
+         alt="{{ shirt.team_name }}" 
+         class="img-thumbnail"
+         width="300" 
+         height="300">
+
+    <!-- Shirt details -->
+    <h2>{{ shirt.team_name }}</h2>
+    <p>Price: £{{ shirt.price }}</p>
+    <p>{{ shirt.description }}</p>
+
+    <!-- Form to add to basket with specified quantity -->
+    <form action="{{ url_for('add_to_basket_with_quantity', shirt_id=shirt.id) }}" method="post">
+        <div class="form-group">
+            <label for="quantity">Quantity:</label>
+            <input type="number" id="quantity" name="quantity" min="1" max="100" value="1" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Add to Basket</button>
+    </form>
+
+    <!-- Link back to the list of shirts -->
+    <a href="{{ url_for('home') }}" class="btn btn-link">Back to Home</a>
+</div>
+{% endblock %}

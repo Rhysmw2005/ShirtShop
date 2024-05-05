@@ -150,19 +150,29 @@ def remove_from_basket(shirt_id):
 
 
 # Home route to display shirts and add to the basket
-@app.route("/")
 @app.route("/home")
 def home():
-    # Retrieve the sorting order from query parameters
+    # Get search query and sort order from query parameters
+    query = request.args.get("query", "")  # Default to an empty string if no query
     sort_order = request.args.get("sort", "asc")  # Default to ascending order
     
-    # Determine the query based on the sort order
-    if sort_order == "asc":
-        shirts = Shirt.query.order_by(Shirt.team_name.asc()).all()  # Ascending order
-    else:
-        shirts = Shirt.query.order_by(Shirt.team_name.desc()).all()  # Descending order
+    # Base query for shirts
+    shirt_query = Shirt.query
     
-    return render_template("home.html", shirts=shirts, sort_order=sort_order)  # Pass the sort order
+    # Apply search filter if a query is provided
+    if query:
+        shirt_query = shirt_query.filter(Shirt.team_name.ilike(f"%{query}%"))  # Case-insensitive search
+    
+    # Apply sorting based on the sort_order
+    if sort_order == "asc":
+        shirt_query = shirt_query.order_by(Shirt.team_name.asc())  # Ascending order
+    else:
+        shirt_query = shirt_query.order_by(Shirt.team_name.desc())  # Descending order
+    
+    shirts = shirt_query.all()  # Execute the query and get the results
+    
+    return render_template("home.html", shirts=shirts, sort_order=sort_order)
+
 
 
 # Other routes for the application
