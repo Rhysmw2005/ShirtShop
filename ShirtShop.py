@@ -1,5 +1,6 @@
 from flask import Flask, render_template, session, redirect, url_for, flash, request
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from forms import RegistrationForm, LoginForm
 
 # Create the Flask application and configure the database
@@ -27,10 +28,14 @@ class Shirt(db.Model):
     shirt_image = db.Column(db.String(20), nullable=False, default='default.jpg')
     price = db.Column(db.Float, nullable=False)
     description = db.Column(db.String(200), nullable=False)
-    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)  # Foreign key to User
+    environmental_impact = db.Column(db.Float, nullable=True)  # New field
+    extended_description = db.Column(db.Text, nullable=True)   # New field
+    owner_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __repr__(self):
         return f"Shirt('{self.team_name}', '{self.price}', '{self.shirt_image}')"
+
+migrate = Migrate(app, db)
 
 # Custom CLI command to seed the database
 @app.cli.command("seed-db")
@@ -54,42 +59,54 @@ def seed_db():
             shirt_image="everton.jpg",
             price=29.99,
             description="Everton home shirt from 1992",
-            owner_id=user1.id  # Reference to User
+            environmental_impact=6.5,  
+            extended_description="This Everton team made up of the likes of Neville Southhall, Martin Keown and Andy Hinchliffe. Led by the legendary Howard Kendall with this shirt.", 
+            owner_id=user1.id
         )
         shirt2 = Shirt(
             team_name="AC Milan",
             shirt_image="ac_milan.jpg",
             price=29.99,
             description="AC Milan home shirt from 2007",
-            owner_id=user2.id  # Reference to User
+            environmental_impact=4.5,  
+            extended_description="During this season AC Milan played their 74th season in the first division of Italian football under the famous Carlo Ancelotti. They also won the club world cup this season.", 
+            owner_id=user2.id  
         )
         shirt3 = Shirt(
             team_name="England National Team",
             shirt_image="england.jpg",
             price=29.99,
             description="England third team shirt from 1990",
-            owner_id=user1.id  # Reference to User
+            environmental_impact=8.5,  
+            extended_description="The England team from this year consisted of some legendary players, most noteably. Paul Gascoigne, Gary Lineker and Peter Shilton between the sticks.", 
+            owner_id=user1.id  
         )
         shirt4 = Shirt(
             team_name="Netherlands National Team",
             shirt_image="netherlands.jpg",
             price=29.99,
             description="Netherlands home shirt from 1988",
-            owner_id=user2.id  # Reference to User
+            environmental_impact=7.5,  
+            extended_description="This well known shirt from the Netherlands was worn by many world renowned players such as Ronald Koeman, Frank Rijkard, Marco Van Basten and Ruud Gullit", 
+            owner_id=user2.id  
         )
         shirt5 = Shirt(
             team_name="Manchester United",
             shirt_image="man_utd.jpg",
             price=29.99,
             description="Manchester United shirt from 1999",
-            owner_id=user1.id  # Reference to User
+            environmental_impact= 9.5,  
+            extended_description="In our opinion this is what everyone thinks of when we mention an old United shirt. This shirt was worn by players such as Gary Neville, David Beckham, Phil Neville and Ryan Giggs", 
+            owner_id=user1.id  
         )
         shirt6 = Shirt(
             team_name="Celtic",
             shirt_image="celtic.jpg",
             price=24.99,
             description="Celtic home shirt from 1997",
-            owner_id=user2.id  # Reference to User
+            environmental_impact=5.5,  
+            extended_description="This shirt is a stallwart of Scottish football which was worn by the likes of Henrik Larsson and Alan Stubbs", 
+            owner_id=user2.id 
         )
 
         # Add all shirts to the database session
@@ -150,6 +167,7 @@ def remove_from_basket(shirt_id):
 
 
 # Home route to display shirts and add to the basket
+@app.route("/")
 @app.route("/home")
 def home():
     # Get search query and sort order from query parameters
