@@ -1,8 +1,6 @@
 {% extends "layout.html" %}
 
 {% block content %}
-    <!-- Links to change the sorting order -->
-
     {% for shirt in shirts %}
     <article class="media content-section">
         <img src="{{ url_for('static', filename='images/' ~ shirt.shirt_image) }}" 
@@ -11,18 +9,24 @@
              width="150" 
              height="150"> 
 
-        <div class="media-body text-padding">
-          <h2>
-              <a class="article-title" href="#">{{ shirt.team_name }}</a>  <!-- Display the team name -->
-          </h2>
-          
-          <p class="article-content">£{{ shirt.price }}</p>  <!-- Price in pounds -->
-          <p class="article-content">{{ shirt.description }}</p>  <!-- Description -->
-          
-          <form action="{{ url_for('add_to_basket', shirt_id=shirt.id) }}" method="post">
+        <div class="media-body text-padding" style="display: flex; justify-content: space-between;">
+          <!-- Left-aligned content -->
+          <div>
+            <h2>
+              <a href="{{ url_for('shirt_detail', shirt_id=shirt.id) }}">{{ shirt.team_name }}</a>
+            </h2>
+            
+            <p class="article-content">£{{ shirt.price }}</p>
+            <p class="article-content">{{ shirt.description }}</p>
+            <p class="article-content">Environmental Impact: {{ shirt.environmental_impact  }}</p>
+
+          </div>
+
+          <!-- Right-aligned "Add to Basket" button -->
+          <form action="{{ url_for('add_to_basket', shirt_id=shirt.id) }}" method="post" style="margin-left: auto;">
               <button type="submit" class="btn btn-primary">Add to Basket</button>
           </form>
         </div>
       </article>
     {% endfor %}
-{% endblock content %}
+{% endblock %}

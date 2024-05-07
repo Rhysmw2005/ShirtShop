@@ -66,7 +66,7 @@ def seed_db():
         shirt2 = Shirt(
             team_name="AC Milan",
             shirt_image="ac_milan.jpg",
-            price=29.99,
+            price=24.99,
             description="AC Milan home shirt from 2007",
             environmental_impact=4.5,  
             extended_description="During this season AC Milan played their 74th season in the first division of Italian football under the famous Carlo Ancelotti. They also won the club world cup this season.", 
@@ -75,7 +75,7 @@ def seed_db():
         shirt3 = Shirt(
             team_name="England National Team",
             shirt_image="england.jpg",
-            price=29.99,
+            price=39.99,
             description="England third team shirt from 1990",
             environmental_impact=8.5,  
             extended_description="The England team from this year consisted of some legendary players, most noteably. Paul Gascoigne, Gary Lineker and Peter Shilton between the sticks.", 
@@ -84,7 +84,7 @@ def seed_db():
         shirt4 = Shirt(
             team_name="Netherlands National Team",
             shirt_image="netherlands.jpg",
-            price=29.99,
+            price=39.99,
             description="Netherlands home shirt from 1988",
             environmental_impact=7.5,  
             extended_description="This well known shirt from the Netherlands was worn by many world renowned players such as Ronald Koeman, Frank Rijkard, Marco Van Basten and Ruud Gullit", 
@@ -93,7 +93,7 @@ def seed_db():
         shirt5 = Shirt(
             team_name="Manchester United",
             shirt_image="man_utd.jpg",
-            price=29.99,
+            price=24.99,
             description="Manchester United shirt from 1999",
             environmental_impact= 9.5,  
             extended_description="In our opinion this is what everyone thinks of when we mention an old United shirt. This shirt was worn by players such as Gary Neville, David Beckham, Phil Neville and Ryan Giggs", 
@@ -102,7 +102,7 @@ def seed_db():
         shirt6 = Shirt(
             team_name="Celtic",
             shirt_image="celtic.jpg",
-            price=24.99,
+            price=29.99,
             description="Celtic home shirt from 1997",
             environmental_impact=5.5,  
             extended_description="This shirt is a stallwart of Scottish football which was worn by the likes of Henrik Larsson and Alan Stubbs", 
@@ -152,6 +152,18 @@ def basket():
     total_cost = calculate_total_cost(basket_items)
 
     return render_template("basket.html", basket=basket_items, total_cost=total_cost)
+
+
+@app.route('/shirt/<int:shirt_id>')
+def shirt_detail(shirt_id):
+    # Fetch the shirt with the given ID from the database
+    shirt = Shirt.query.get(shirt_id)
+    
+    if not shirt:
+        return "Shirt not found", 404  # Return 404 if the shirt does not exist
+    
+    # Render the detail page with the retrieved shirt data
+    return render_template('shirt_detail.html', shirt=shirt)
 
 
 @app.route("/remove_from_basket/<int:shirt_id>", methods=["POST"])

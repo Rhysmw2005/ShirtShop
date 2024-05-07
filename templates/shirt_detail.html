@@ -12,14 +12,10 @@
     <!-- Shirt details -->
     <h2>{{ shirt.team_name }}</h2>
     <p>Price: £{{ shirt.price }}</p>
-    <p>{{ shirt.description }}</p>
+    <p>{{ shirt.extended_description}}</p>
+    <p>Environmental Impact: {{ shirt.environmental_impact }}</p>
 
-    <!-- Form to add to basket with specified quantity -->
-    <form action="{{ url_for('add_to_basket_with_quantity', shirt_id=shirt.id) }}" method="post">
-        <div class="form-group">
-            <label for="quantity">Quantity:</label>
-            <input type="number" id="quantity" name="quantity" min="1" max="100" value="1" class="form-control" required>
-        </div>
+    <form action="{{ url_for('add_to_basket', shirt_id=shirt.id) }}" method="post">
         <button type="submit" class="btn btn-primary">Add to Basket</button>
     </form>
 
