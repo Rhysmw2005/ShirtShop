@@ -19,6 +19,9 @@
     <!-- Display the total cost -->
     <h3>Total Cost: £{{ total_cost }}</h3>  <!-- Display the calculated total cost -->
 
+    <!-- Button to proceed to checkout -->
+    <a href="{{ url_for('checkout') }}" class="btn btn-success">Proceed to Checkout</a>  <!-- Link to the checkout page -->
+
 {% else %}
     <p>Your basket is empty.</p>
 {% endif %}

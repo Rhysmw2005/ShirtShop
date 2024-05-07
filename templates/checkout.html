@@ -1,0 +1,43 @@
+{% extends "layout.html" %}
+
+{% block content %}
+    <h2>Checkout</h2>
+    
+    <!-- Display validation errors -->
+    {% for error in form.errors.values() %}
+    <div class="alert alert-danger">{{ error[0] }}</div>
+    {% endfor %}
+    
+    <form method="post">
+        {{ form.hidden_tag() }}  <!-- Required for CSRF protection -->
+        
+        <!-- Credit Card Number with validation -->
+        <div class="form-group">
+            {{ form.credit_card.label }}
+            {{ form.credit_card(class_="form-control", placeholder="1234-5678-9012-3456") }}
+        </div>
+        
+        <!-- Card Holder Name -->
+        <div class="form-group">
+            {{ form.card_holder.label }}
+            {{ form.card_holder(class_="form-control", placeholder="John Doe") }}
+        </div>
+        
+        <!-- Expiry Date -->
+        <div class="form-group">
+            {{ form.expiry_date.label }}
+            {{ form.expiry_date(class_="form-control", placeholder="MM/YY") }}
+        </div>
+        
+        <!-- CVV -->
+        <div class="form-group">
+            {{ form.cvv.label }}
+            {{ form.cvv(class_="form-control", placeholder="123") }}
+        </div>
+        
+        <!-- Submit Button -->
+        <div class="form-group">
+            {{ form.submit(class_="btn btn-primary") }}
+        </div>
+    </form>
+{% endblock %}

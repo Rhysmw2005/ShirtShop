@@ -1,6 +1,9 @@
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
 from flask import Flask, render_template, session, redirect, url_for, flash, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from wtforms.validators import DataRequired, Regexp, Length
 from forms import RegistrationForm, LoginForm
 
 # Create the Flask application and configure the database
@@ -121,6 +124,36 @@ def seed_db():
 
         print("Database seeded with initial data.")
 
+
+# Define the Checkout Form
+class CheckoutForm(FlaskForm):
+    credit_card = StringField(
+        'Credit Card Number',
+        validators=[
+            DataRequired(message="Credit card number is required."),
+            Length(min=16, max=19, message="Credit card number must be 16 digits."),
+            Regexp(r'^\d{4}[- ]?\d{4}[- ]?\d{4}[- ]?\d{4}$', message="Invalid credit card format. Must be 16 digits."),
+        ]
+    )
+    card_holder = StringField('Card Holder Name', validators=[DataRequired(message="Card holder name is required.")])
+    expiry_date = StringField('Expiry Date (MM/YY)', validators=[DataRequired(message="Expiry date is required.")])
+    cvv = StringField('CVV', validators=[DataRequired(message="CVV is required.")])
+    submit = SubmitField('Checkout')
+
+@app.route('/checkout', methods=['GET', 'POST'])
+def checkout():
+    form = CheckoutForm()
+    
+    if form.validate_on_submit():  # When form is submitted and validated
+        # Process payment (implement payment logic here)
+        # If successful, redirect to a confirmation page
+        flash("Checkout successful!", "success")
+        return redirect(url_for('basket'))  # Redirect to the basket or another page
+
+    return render_template('checkout.html', form=form)  # Render the checkout page
+
+
+
 # Route to add items to the basket
 @app.route("/add_to_basket/<int:shirt_id>", methods=["POST"])
 def add_to_basket(shirt_id):
@@ -182,26 +215,33 @@ def remove_from_basket(shirt_id):
 @app.route("/")
 @app.route("/home")
 def home():
-    # Get search query and sort order from query parameters
-    query = request.args.get("query", "")  # Default to an empty string if no query
-    sort_order = request.args.get("sort", "asc")  # Default to ascending order
+    # Get the sorting criteria from query parameters
+    sort_field = request.args.get("sort_field", "team_name")  # Default sorting field
+    sort_order = request.args.get("sort_order", "asc")  # Default sort order
     
     # Base query for shirts
     shirt_query = Shirt.query
     
-    # Apply search filter if a query is provided
-    if query:
-        shirt_query = shirt_query.filter(Shirt.team_name.ilike(f"%{query}%"))  # Case-insensitive search
-    
-    # Apply sorting based on the sort_order
-    if sort_order == "asc":
-        shirt_query = shirt_query.order_by(Shirt.team_name.asc())  # Ascending order
-    else:
-        shirt_query = shirt_query.order_by(Shirt.team_name.desc())  # Descending order
-    
+    # Apply sorting based on the field and order
+    if sort_field == "price":
+        if sort_order == "asc":
+            shirt_query = shirt_query.order_by(Shirt.price.asc())
+        else:
+            shirt_query = shirt_query.order_by(Shirt.price.desc())
+    elif sort_field == "environmental_impact":
+        if sort_order == "asc":
+            shirt_query = shirt_query.order_by(Shirt.environmental_impact.asc())
+        else:
+            shirt_query = shirt_query.order_by(Shirt.environmental_impact.desc())
+    else:  # Default case, sort by team name
+        if sort_order == "asc":
+            shirt_query = shirt_query.order_by(Shirt.team_name.asc())
+        else:
+            shirt_query = shirt_query.order_by(Shirt.team_name.desc())
+
     shirts = shirt_query.all()  # Execute the query and get the results
     
-    return render_template("home.html", shirts=shirts, sort_order=sort_order)
+    return render_template("home.html", shirts=shirts, sort_field=sort_field, sort_order=sort_order)
 
 
 

@@ -53,22 +53,33 @@
             {% endwith %}
             {% block content %}{% endblock %}
           </div>
+
+          <!-- Sidebar with sorting and filter options -->
           <div class="col-md-4">
             <div class="content-section">
               <!-- Search Bar -->
               <form method="get" action="{{ url_for('home') }}">
                 <div class="form-group">
                   <label for="search">Search for Shirts:</label>
-                  <input type="text" id="search" name="query" class="form-control" placeholder="Search by team name" value="{{ request.args.get('query', '') }}">  <!-- Search input with existing value -->
+                  <input type="text" id="search" name="query" class="form-control" placeholder="Search by team name" value="{{ request.args.get('query', '') }}">
                 </div>
                 <button type="submit" class="btn btn-primary">Search</button>
               </form>
 
-              <!-- Filter Options -->
+              <!-- Sort & Filter -->
               <h3>Sort & Filter</h3>
               <div>
-                <a href="{{ url_for('home', sort='asc') }}" class="btn btn-link">Sort A-Z</a>  <!-- Sort alphabetically -->
-                <a href="{{ url_for('home', sort='desc') }}" class="btn btn-link">Sort Z-A</a>  <!-- Sort in reverse -->
+                <!-- Sort by Team Name (A-Z, Z-A) -->
+                <a href="{{ url_for('home', sort_field='team_name', sort_order='asc') }}" class="btn btn-link">Sort A-Z</a>
+                <a href="{{ url_for('home', sort_field='team_name', sort_order='desc') }}" class="btn btn-link">Sort Z-A</a>
+
+                <!-- Sort by Price -->
+                <a href="{{ url_for('home', sort_field='price', sort_order='asc') }}" class="btn btn-link">Price (Low to High)</a>
+                <a href="{{ url_for('home', sort_field='price', sort_order='desc') }}" class="btn btn-link">Price (High to Low)</a>
+
+                <!-- Sort by Environmental Impact -->
+                <a href="{{ url_for('home', sort_field='environmental_impact', sort_order='asc') }}" class="btn btn-link">Env. Impact (Low to High)</a>
+                <a href="{{ url_for('home', sort_field='environmental_impact', sort_order='desc') }}" class="btn btn-link">Env. Impact (High to Low)</a>
               </div>
             </div>
           </div>
@@ -76,7 +87,6 @@
     </main>
 
     <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
